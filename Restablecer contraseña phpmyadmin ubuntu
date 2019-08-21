@@ -1,0 +1,30 @@
+Pasos a realizar:
+Se abre una terminal y se detiene el servicio de MySQL
+sudo systemctl stop mysql.service
+
+Se crea un directorio para el lock del servicio Mysql
+sudo mkdir /var/run/mysqld
+
+Se entregan permisos a mysql sobre el directorio creado
+sudo chown mysql: /var/run/mysqld
+
+Se inicia Mysql en modo seguro de manera local
+sudo mysqld_safe --skip-grant-tables --skip-networking &
+
+Se abre otra terminal y se inicia sesión sin contraseña
+sudo mysql -u root mysql
+
+Luego se ejecuta la siguiente sentencia.
+UPDATE mysql.user SET authentication_string=PASSWORD('NUEVOPASSWORD'), plugin='mysql_native_password' WHERE User='root' AND Host='localhost';
+
+Y al final se sale del mysql
+EXIT;
+
+Se abre otra terminal y se hace shutdown
+sudo mysqladmin -S /var/run/mysqld/mysqld.sock shutdown
+
+iniciar mysql de forma normal.
+sudo systemctl restart mysql.service
+
+Se inicia sesión nuevamente, pero ahora con la contraseña que se restableció.
+sudo mysql -u root -p
