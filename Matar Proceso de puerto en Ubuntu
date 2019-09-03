@@ -1,0 +1,27 @@
+Primero haremos uso del comando fuser el cual identifica que procesos están usando un archivo o un socket.
+
+$ fuser -n tcp 3000
+3000/tcp: 7425
+
+El parámetro -n lo usamos cuando queremos identificar procesos que estén usando sockets TCP o UDP, en mi caso quiero saber quien está usando el puerto 3000.
+
+El comando nos regresa el pid del proceso, con este dato y con ayuda del comando ps obtendremos más información al respecto.
+
+
+$ ps x | grep 7425
+7425 pts/3 Tl 1:15 /home/carlos/.rvm/rubies/ruby-1.9.3-p0/bin/ruby script/rails s
+
+Con esto vemos que se quedó colgada una instacia del servidor de pruebas de rails, para liberar el puerto matamos el proces usando el pid que ya tenemos.
+
+
+$ kill -9 7425
+
+Y después vemos que efectivamente el proceso ha sido terminado.
+
+
+$ ps x | grep 7425
+7973 pts/3 S+ 0:00 grep --color=auto 7425
+[1]+ Terminado (killed) rails s
+
+
+Fuente: http://community.logicalbricks.com/node/103
